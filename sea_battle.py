@@ -20,18 +20,18 @@ class Dot:
         self.x = x
         self.y = y
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         return self.x == other.x and self.y == other.y
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
         return f'Dot({self.x}, {self.y})'
     
 class Ship:
     def __init__(self, bow: Dot, length: int, vertical: bool) -> None:
         self.bow = bow
         self.length = length
-        self.vertical = vertical
         self.lives = length
+        self.vertical = vertical
 
     @property
     def dots(self):
@@ -58,7 +58,7 @@ class Board:
         self.busy = []
         self.ships = []
         self.last_hit = []
-        self.count_destr_ships = 0
+        self.count_destroy_ships = 0
 
     def __str__(self) -> str:
         result = '  | ' + ' | '.join(map(str, range(1, self.size + 1))) + ' |'
@@ -104,7 +104,7 @@ class Board:
                 print('Попадение!')
                 ship.lives -= 1
                 if ship.lives == 0:
-                    self.count_destr_ships += 1
+                    self.count_destroy_ships += 1
                     self.contour(ship, visible=True)
                     print('Корабль уничтожен!')
                     self.last_hit = []
@@ -121,7 +121,7 @@ class Board:
         self.busy = []
 
     def defeat(self):
-        return self.count_destr_ships == len(self.ships)
+        return self.count_destroy_ships == len(self.ships)
     
 class Player:
     def __init__(self, board, enemy) -> None:
@@ -136,10 +136,10 @@ class Player:
             try:
                 target = self.ask()
                 repeat = self.enemy.shot(target)
-                time.sleep(1)
+                time.sleep(2)
                 return repeat
-            except BoardException as excep:
-                print(excep)
+            except BoardException as e:
+                print(e)
 
 class AI(Player):
     def ask(self):
@@ -194,7 +194,7 @@ class Game:
                 attempts += 1
                 if attempts > 2000:
                     return None
-                ship = Ship(Dot(random.randint(0, self.size), (random.randint(0, self.size))), i, bool(random.randint(0, 1)))
+                ship = Ship(Dot(random.randint(0, self.size), random.randint(0, self.size)), i, bool(random.randint(0, 1)))
                 try:
                     board.add_ship(ship)
                     break
@@ -212,11 +212,9 @@ class Game:
     @staticmethod
     def greet():
         print('-' * 20)
-        print('  Приветствуем вас ')
-        print('      в игре       ')
-        print('    морской бой    ')
+        print('  Приветствуем вас в игре морской бой    ')
         print('-' * 20)
-        print(' формат ввода: x y ')
+        print(' Формат ввода(для справки): x y ')
         print(' x - номер строки  ')
         print(' y - номер столбца ')
         print('-' * 20)
@@ -249,10 +247,11 @@ class Game:
                 print('AI выйграл!')
                 break
             step += 1
+
     def start(self):
         self.greet()
         self.loop()
 
 
-g = Game()
-g.start()
+game = Game()
+game.start()
