@@ -169,6 +169,7 @@ class User(Player):
             coords = input('Введите координаты выстрела:\t').split()
             if len(coords) != 2:
                 print('Введите 2 координаты!')
+                continue
             x, y = coords
             if not all((x.isdigit(), y.isdigit())):
                 print('Координаты должны быть числами')
